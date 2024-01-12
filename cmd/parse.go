@@ -22,9 +22,11 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"bytes"
+	"strings"
+
 	"github.com/acarl005/stripansi"
 	"github.com/mikefarah/yq/v4/cmd"
-	"github.com/mikefarah/yq/v4/test"
 	"github.com/spf13/cobra"
 )
 
@@ -50,7 +52,6 @@ yarser parse "$YARSER_SRC_FILE_PATH"
 		} else {
 			parseYaml(srcFilePath, dstFilePath)
 		}
-
 	},
 }
 
@@ -59,14 +60,26 @@ func getRootCommand() *cobra.Command {
 }
 
 func runYq(input string) string {
+	/*
+	 * TODO - use use the built in https://pkg.go.dev/github.com/mikefarah/yq/v4@v4.40.5/pkg/yqlib
+	 * and don't call out to the yq	 executable if possible.
+	 */
 	cmd := getRootCommand()
-	result := test.RunCmd(cmd, input)
-	if result.Error != nil {
-		logger.Println(result.Error)
+	buffer := new(bytes.Buffer)
+
+	cmd.SetOutput(buffer)
+	cmd.SetArgs(strings.Split(input, " "))
+
+	err := cmd.Execute()
+	if err != nil {
+		logger.Println(err.Error())
 		return ""
 	}
+
 	logger.Debug("Successfully executed:", "yq", input)
-	return stripansi.Strip(result.Output)
+	output := buffer.String()
+
+	return stripansi.Strip(output)
 }
 
 func parseYaml(srcFilePath string, dstFilePath string) error {

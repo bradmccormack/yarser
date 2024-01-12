@@ -15,6 +15,7 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number of yarser",
 	Long:  `All software has versions. This is yarser's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("0.0.1")
+		// TODO Make this use semver + git commit SHA or tag.
+		fmt.Println("0.0.2")
 	},
 }
