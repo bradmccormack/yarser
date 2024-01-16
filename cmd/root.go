@@ -41,13 +41,19 @@ type callback func(string, string) error
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "yarser",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Simple CLI tool to preprocess YAML files with optional watch mode",
+	Long: `
+Yarser is a simple CLI tool to pre-process YAML files with optional watch mode.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Yarser is useful when you want to use more advanced features in YAML such
+as anchors, aliases and merge operations but your yaml processor doesn't support them.
+
+Yarser will process the YAML file with yq and produce a new yaml file with the processed
+output.
+
+Yarser allows usage of '.hidden' nodes by adding the prefix '.' to a root node.
+All hidden nodes are omitted from the final result.
+	`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) {},
